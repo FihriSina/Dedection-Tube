@@ -1,0 +1,165 @@
+# Veri ve eğitim konfigürasyonu
+
+data:
+  # Veri yolları
+  dataset_root: "data/processed/unified"
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  unified_dir: "data/processed/unified"
+  stats_json: "data/processed/unified/stats.json"
+  stats_markdown: "data/processed/unified/dataset_report.md"
+  synthetic_dir: "data/synthetic"
+  real_dir: "data/real"
+  
+  # Split oranları
+  train_ratio: 0.7
+  val_ratio: 0.2
+  test_ratio: 0.1
+  
+  external_sources:
+    kaggle:
+      enabled: true #Kaggle veri setlerini kullanmak için
+      dataset: "saikatpanda/cubes-craters-and-cylinder"
+      target_dir: "data/raw/kaggle/cubes-craters-and-cylinder" #hangi klasörde ineceği
+      requires_api_key: true
+    roboflow:
+      enabled: true
+      format: "yolov8"
+      target_dir: "data/raw/roboflow"
+      datasets:
+        - key: "colored_blocks"
+          workspace: "autonomous-object-picking-robot"
+          project: "colored-blocks"
+          version: 1
+        - key: "cube_pr1ld"
+          workspace: "roboticarm"
+          project: "cube-pr1ld"
+          version: 1
+        - key: "cube_detection_competition"
+          workspace: "competition-s7hyb"
+          project: "cube-detection-6gb4e-qcw3w"
+          version: 1
+        - key: "cube_detection_project"
+          workspace: "yolov8-hhmit"
+          project: "cube-detection-project"
+          version: 1
+
+classes:
+  hierarchy:
+    parent: "cube"
+    subclasses: ["cube"]
+  mapping_rules:
+    generic_cube: ["cube", "cubes", "block", "blocks", "box", "object"]
+  
+# Sentetik veri üretimi
+synthetic:
+  # Üretim hedefi
+  num_images: 5000
+  
+  # Küp varyasyonları
+  cube:
+    positions:
+      # Kameraya göre mesafe (metre)
+      min_distance: 0.3
+      max_distance: 2.0
+      # Yanal konum (metre)
+      x_range: [-0.5, 0.5] # Kameranın tam ortasından sağa sola 0.5 metre
+      y_range: [-0.3, 0.3]
+    
+    # Yönelim (derece)
+    rotation:
+      roll: [-30, 30] # Küpün kendi ekseni etrafındaki dönüşü
+      pitch: [-30, 30] 
+      yaw: [-180, 180]
+  
+  # Arka plan
+  background:
+    types: ["plain", "textured", "arena"]
+    colors:
+      - [200, 200, 200]  # Açık gri
+      - [100, 100, 100]  # Koyu gri
+      - [255, 255, 255]  # Beyaz
+  
+  # Işıklandırma
+  lighting:
+    ambient: [0.3, 0.8]
+    point_lights: [1, 3]
+    
+  # Domain randomization
+  randomization:
+    blur:
+      enabled: true
+      kernel_range: [0, 7]
+    noise:
+      enabled: true
+      sigma_range: [0, 15]
+    brightness:
+      enabled: true
+      factor_range: [0.7, 1.3]
+    contrast:
+      enabled: true
+      factor_range: [0.8, 1.2]
+
+# Augmentation (eğitim sırasında)
+augmentation:
+  enabled: false
+  
+  transforms:
+    horizontal_flip:
+      enabled: false  # Saha simetrisi yoksa kapalı
+      p: 0.5
+    
+    brightness_contrast:
+      enabled: true
+      brightness_limit: 0.2
+      contrast_limit: 0.2
+      p: 0.5
+    
+    hue_saturation: # HSV renk kaymaları
+      enabled: true
+      hue_shift_limit: 20
+      sat_shift_limit: 30
+      val_shift_limit: 20
+      p: 0.5
+    
+    gaussian_noise: # Görüntüye rastgele gürültü ekleme
+      enabled: true
+      var_limit: [10, 50]
+      p: 0.3
+    
+    blur:
+      enabled: true
+      blur_limit: 5
+      p: 0.3
+    
+    affine: # Ölçekleme, çevirme, döndürme
+      enabled: true
+      scale: [0.9, 1.1]
+      translate_percent: [-0.1, 0.1]
+      rotate: [-15, 15]
+      p: 0.5
+    
+    perspective: # Perspektif bozulması
+      enabled: true
+      scale: [0.02, 0.05]
+      p: 0.3
+    
+    cutout: # Görüntünün rastgele bölgelerini siyah kutularla kapatma
+      enabled: true
+      num_holes: 3
+      max_h_size: 30
+      max_w_size: 30
+      p: 0.3
+
+# RF-DETR eğitim parametreleri
+training:
+  rf_detr:
+    epochs: 30
+    batch_size: 4
+    grad_accum_steps: 4  # efektif batch = batch_size * grad_accum_steps
+    lr: 0.0001
+    resolution: 448  # 56'nın katı; 560 → 5.6GB GPU'da OOM
+    patience: 15
+    save_dir: "runs/train_rf_detr"
+    # COCO formatında veri seti dizini (train/ ve valid/ alt dizinleri içermeli)
+    coco_data_dir: "data/processed/coco"

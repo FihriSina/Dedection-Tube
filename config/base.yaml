@@ -1,0 +1,37 @@
+# TEKNOFEST 2026 Robolig - Temel Konfigürasyon
+
+# Küp fiziksel özellikleri
+cube:
+  size_cm: 9.0  # 9x9x9 cm
+  size_m: 0.09  # metre cinsinden
+  
+  # 3D model noktaları (küp köşeleri, metre cinsinden)
+  # Koordinat sistemi: küp merkezi orijinde
+  # Poz Tahmi
+  model_points:
+    # Alt yüz köşeleri (z=-0.045)
+    - [-0.045, -0.045, -0.045]  # Sol alt arka
+    - [ 0.045, -0.045, -0.045]  # Sağ alt arka
+    - [ 0.045,  0.045, -0.045]  # Sağ alt ön
+    - [-0.045,  0.045, -0.045]  # Sol alt ön
+    # Üst yüz köşeleri (z=0.045)
+    - [-0.045, -0.045,  0.045]  # Sol üst arka
+    - [ 0.045, -0.045,  0.045]  # Sağ üst arka
+    - [ 0.045,  0.045,  0.045]  # Sağ üst ön
+    - [-0.045,  0.045,  0.045]  # Sol üst ön
+
+# Loglama ayarları
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  use_colors: true
+  log_dir: "logs"
+  
+# Performans hedefleri
+performance:
+  target_fps: 20
+  max_latency_ms: 50
+  
+# Sistem sabitleri
+system:
+  random_seed: 42
+  device: "cuda"  # veya "cuda" GPU varsa

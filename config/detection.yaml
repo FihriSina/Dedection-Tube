@@ -1,0 +1,71 @@
+# Algılama modülü konfigürasyonu
+
+detection:
+  # RF-DETR sinir ağı dedektörü + klasik CV fusion
+  rf_detr:
+    enabled: true
+    model_path: "model/rf_detr_cube_detector.pth"
+    model_size: "base"  # base veya large
+    confidence_threshold: 0.75
+    device: "cuda"
+    resolution: 448  # eğitimde kullanılan resolution ile eşleşmeli
+
+    # Sınıflar
+    classes:
+      0: "cube"
+
+  # BoxMOT takip entegrasyonu (kurulu değilse devre dışı bırak)
+  # kullanılabilecek trackerlar: bytetrack, deepocsort, botsort
+  tracking:
+    enabled: true
+    tracker_type: "bytetrack"
+    tracker_backend: "python"
+    tracker_config: null
+    reid_weights: null
+    device: "cuda"
+    half: false
+    per_class: true
+    keep_untracked_detections: true
+  
+  # Klasik CV algılama (fallback/yedek)
+  classical:
+    enabled: true
+    
+    # Ön işleme
+    blur_kernel: 5 # Gürültü azaltmak için Gaussian blur
+    morph_kernel: 5 # Morfolojik işleme için kernel boyutu
+    
+    # Kontur filtreleme
+    min_area: 500  # piksel²
+    max_area: 100000  # piksel²
+    min_aspect_ratio: 0.7  # kareye yakınlık
+    max_aspect_ratio: 1.3 # kareye yakınlık
+    min_extent: 0.6  # alan / bbox alan oranı
+    
+    # Kare köşe tespiti
+    approx_epsilon: 0.04  # kontur yaklaşıklık toleransı
+    min_corners: 4 # minimum köşe sayısı
+    max_corners: 8 # maksimum köşe sayısı
+    
+    # Güven hesabı
+    base_confidence: 0.6 # Klasik CV güven skoru
+
+    # Kenar tespiti eşikleri
+    canny_threshold1: 50
+    canny_threshold2: 150
+  
+  # Fusion stratejisi
+  fusion:
+    # Sinir ağı dedektörünü önceliklendir
+    prefer_neural: true
+
+    # Yedek klasik CV ne zaman devreye girsin
+    fallback_if_neural_fails: true
+    fallback_if_low_confidence: true
+    fallback_confidence_threshold: 0.4
+
+    # Sonuç birleştirme
+    use_nms: true # Aynı nesne için birden fazla algılama varsa en iyisini seç
+    nms_iou_threshold: 0.5 # NMS(Non-Maximum Suppression) için IoU eşiği
+
+

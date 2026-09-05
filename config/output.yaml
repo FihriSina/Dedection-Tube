@@ -1,0 +1,8 @@
+output:
+  output_mode: stdout # Sonuçları doğrudan terminale yazdırır
+  serial_port: COM3 
+  serial_baud: 115200
+  socket_host: localhost
+  socket_port: 5555
+  socket_protocol: tcp
+  jsonl_path: output/detections.jsonl

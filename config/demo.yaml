@@ -1,0 +1,73 @@
+# Gerçek zamanlı demo konfigürasyonu
+
+demo:
+  # Görselleştirme
+  visualization:
+    enabled: true
+    window_name: "TEKNOFEST Robolig AI"
+    
+    # Çizim ayarları
+    draw_bbox: true
+    draw_label: true
+    draw_confidence: true
+    draw_center: true
+    draw_axes: true  # 3D poz gösterimi
+    
+    # Renkler (BGR formatı)
+    colors:
+      cube: [0, 255, 0]  # Yeşil
+      text: [255, 255, 255]  # Beyaz
+    
+    # Font
+    font_scale: 0.6
+    font_thickness: 2
+    
+    # Overlay opacity
+    bbox_alpha: 0.3 # Bounding box yarı saydamlığı
+  
+  # Çıktı kaydetme
+  output:
+    # Video kayıt
+    save_video: false
+    video_path: "output/demo_output.mp4"
+    video_fps: 30
+    video_codec: "mp4v"
+    
+    # JSON log
+    save_json: false
+    json_path: "output/detections.jsonl"  # Line-delimited JSON
+    
+    # Frame kaydetme
+    save_frames: false
+    frames_dir: "output/frames"
+    frame_interval: 30  # Her 30 frame'de bir kaydet
+  
+  # Pipeline modülleri
+  modules:
+    camera: true
+    detection: true
+    pose_estimation: true
+  
+  # Performans
+  performance:
+    # FPS gösterimi
+    show_fps: true
+    fps_window_size: 30  # Son N frame üzerinden ortalama
+    
+    # Profiling
+    enable_profiling: false # Her modülün çalışma süresini ölç
+    profile_log: "output/profile.log"
+    
+    # Frame skip (düşük performansta)
+    skip_frames: 0  # 0 = skip yok, 1 = her ikinci frame
+  
+  # Kontroller
+  controls:
+    # Klavye kısayolları
+    quit_key: "q"
+    pause_key: " "  # Space
+    save_frame_key: "s"
+    toggle_overlay_key: "o"
+    
+    # Otomatik durdurma
+    auto_stop_after_sec: 0  # 0 = sonsuz

@@ -1,0 +1,44 @@
+# Kamera konfigürasyonu
+
+camera:
+  # Cihaz ayarları
+  device_index: 1
+  
+  # Görüntü ayarları
+  width: 1280
+  height: 720
+  fps: 30
+  
+  # Manuel kamera kontrolü
+  auto_exposure: false #oto pozlama yani kendi kendine parlaklık ayarı yapacauk
+  exposure: 0.25  # 0-1 arası (düşük = daha az motion blur)
+  auto_white_balance: false
+  white_balance: 4600  # Kelvin
+  
+  # Kalibrasyon
+  calibration_file: "camera_calibration.npz" #Kamera kalibrasyon verilerinin saklanacağı dosya
+  use_undistort: true # Kalibrasyon sonrası görüntü düzeltme
+  
+  # Yeniden bağlanma
+  reconnect_enabled: true # Kamera bağlantısı kesilirse yeniden bağlanmayı dene
+  reconnect_attempts: 3
+  reconnect_delay_sec: 2.0
+  
+  # Frame buffer
+  buffer_size: 1  # Sadece en son frame (düşük latency)
+
+  # Sentetik kalibrasyon (gerçek kalibrasyon dosyası yokken kullanılır)
+  synthetic_focal_length_px: 800.0
+
+# Kalibrasyon ayarları
+calibration:
+  # Checkerboard boyutları
+  checkerboard_size: [9, 6]  # iç köşe sayısı (genişlik, yükseklik)
+  square_size_mm: 25  # Her karenin boyutu (mm) (Satranç tahtasındaki karelerin gerçek dünyadaki boyutu)
+  
+  # Kalibrasyon görüntü sayısı
+  min_images: 15
+  max_images: 30
+  
+  # Kabul kriterleri
+  max_reprojection_error: 0.5  # piksel Kalibrasyonda kabul edilebilir en yüksek hata.

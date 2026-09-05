@@ -1,0 +1,31 @@
+# Poz tahmin modülü konfigürasyonu
+
+pose:
+  # Köşe tespiti parametreleri
+  corners:
+    roi_padding: 6          # Bounding box çevresine eklenen piksel padding
+    max_corners: 12         # goodFeaturesToTrack maksimum köşe sayısı
+    quality_level: 0.01     # goodFeaturesToTrack kalite eşiği
+    min_distance: 8         # Köşeler arası minimum piksel mesafe
+    block_size: 3           # goodFeaturesToTrack blok boyutu
+    harris_block_size: 2    # Harris köşe tespiti blok boyutu
+    harris_ksize: 3         # Harris Sobel kernel boyutu
+    harris_k: 0.04          # Harris serbest parametre
+    harris_threshold: 0.01  # Harris yanıt eşiği (max_response oranı)
+    approx_epsilon: 0.04    # approxPolyDP toleransı (perimeter oranı)
+    canny_threshold1: 50    # Köşe arama fallback Canny düşük eşik
+    canny_threshold2: 150   # Köşe arama fallback Canny yüksek eşik
+
+  # solvePnP parametreleri
+  pnp:
+    min_depth_m: 0.2            # Güvenilir derinlik aralığı minimum (metre)
+    max_depth_m: 3.0            # Güvenilir derinlik aralığı maksimum (metre)
+    high_confidence: 0.9        # Derinlik aralıkta ise pozisyon güveni
+    low_confidence: 0.5         # Derinlik aralık dışı ise pozisyon güveni
+    orientation_confidence: 0.8 # 4 köşe ile elde edilen yönelim güveni
+
+  # Geometrik fallback parametreleri
+  geometry:
+    default_depth_m: 1.0    # Derinlik hesaplanamazsa kullanılan varsayılan (metre)
+    depth_confidence: 0.6   # Başarılı derinlik tahmini güveni
+    fallback_confidence: 0.1 # Varsayılan derinlik kullanıldığında güven

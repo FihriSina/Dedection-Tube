@@ -1,0 +1,38 @@
+[project]
+name = "teknofest-robolig-ai"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+
+dependencies = [
+    "numpy>=1.24.0",
+    "opencv-python>=4.8.0",
+    "PyYAML>=6.0",
+    "torch>=2.0.0",
+    "torchvision>=0.15.0",
+    "onnxruntime>=1.15.0",
+    "albumentations>=1.3.0",
+    "boxmot>=21.0.0",
+    "scipy>=1.10.0",
+    "matplotlib>=3.7.0",
+    "pydantic>=2.0.0",
+    "coloredlogs>=15.0",
+    "tqdm>=4.65.0",
+    "pandas>=2.0.0,<3.0.0",
+    "rfdetr[train,loggers]>=1.8.3",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]
+
+[tool.uv]
+# opencv-python ve opencv-python-headless ayni cv2 namespace'ini paylastigi icin
+# her ikisi birden kuruldugunda GUI fonksiyonlari (imshow) calismaz.
+# uv'nin opencv-python-headless transitive bağımlılıklarını devre dışı bırakmasını
+# sağlamak için imkansız bir extra marker ile override ediyoruz.
+override-dependencies = [
+    "opencv-python-headless>=0.0.0; extra == 'never'",
+]
